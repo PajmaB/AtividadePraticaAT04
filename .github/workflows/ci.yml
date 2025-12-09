@@ -1,0 +1,66 @@
+name: Reusable Workflow
+# Define o nome do workflow como "Reusable Workflow".
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_call:
+    # Especifica que este workflow pode ser chamado de outros workflows.
+
+    inputs:
+      # Define os parâmetros de entrada que são necessários para chamar este workflow.
+
+      message:
+        required: true
+        # Declara que a entrada "message" é obrigatória.
+
+        type: string
+        # Especifica que o tipo da entrada "message" é uma string.
+
+jobs:
+  qualidade-seguranca:
+    # Define um job chamado "Qualidade Segurança".
+
+    runs-on: ubuntu-latest
+    # Especifica que o job será executado em um ambiente baseado em Ubuntu.
+
+    steps:
+      - name: Checkout do código
+        uses: action/checkout@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      
+      - name: Compilar Robo JoaoPauloMonstroDeBytes.java com dependências robocode.jar
+        run: javac -cp libs/robocode.jar JoaoPauloMonstroDeBytes.java
+
+      - name: Baixar Checkstyle (10.12.4)
+        run: wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.4/checkstyle-10.12.4-all.jar -O checkstyle.jar
+
+      - name: Rodar Checkstyle
+        run: java -jar checkstyle.jar -c libs/google_checks.xml JoaoPauloMonstroDeBytes.java
+
+      - name: Baixar SpotBugs
+        run: wget https://repo1.maven.org/maven2/com/github/spotbugs/spotbugs/4.8.3/spotbugs-4.8.3.tgz -O spotbugs.tgz
+
+      - name: Extrair SpotBugs
+        run: tar -xzf spotbugs.tgz
+
+      - name: Dar permissão de execução ao spotbugs
+        run: chmod +x spotbugs-4.8.3/bin/spotbugs
+
+      - name: Rodar spotbugs
+        run: |
+          mkdir -p out
+          javac -cp libs/robocode.jar -d out JoaoPauloMonstroDeBytes.java
+          spotbugs-4.8.3/bin/spotbugs -textui out/
+
+      - name: Exibir mensagem final sucesso
+        if: ${{ sucess() }}
+        run: |
+          echo 'CI executado com sucesso!'
+          echo 'Robo compilado, verificado com Checkstyle e analisado com SpotBugs'
+          echo 'Arquivo usado: JoaoPauloMonstroDeBytes.java'
+          echo 'Parabéns! Pipeline completa e Aprovada!'
