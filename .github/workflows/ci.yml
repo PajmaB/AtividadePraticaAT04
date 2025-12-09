@@ -58,7 +58,7 @@ jobs:
           spotbugs-4.8.3/bin/spotbugs -textui out/
 
       - name: Exibir mensagem final sucesso
-        if: ${{ sucess() }}
+        if: ${{ success() }}
         run: |
           echo 'CI executado com sucesso!'
           echo 'Robo compilado, verificado com Checkstyle e analisado com SpotBugs'
