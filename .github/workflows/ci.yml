@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout do código
-        uses: action/checkout
+        uses: action/AtividadePraticaAT04@v4
         with:
           distribution: 'temurin'
           java-version: '11'
