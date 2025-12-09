@@ -4,9 +4,9 @@ import robocode.*;
 // API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
 
 /**
- * MyFirstRobot - a robot by (your name here)
+ * JoaoPauloMonstroDeBytes - a robot by (your name here)
  */
-public class MyFirstRobot extends Robot
+public class JoaoPauloMonstroDeBytes extends Robot
 {
 	/**
 	 * run: MyFirstRobot's default behavior
